@@ -1,16 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Advanced Search</title>
-        <link rel="stylesheet" href="../style/style.css">
-    </head>
-    <body>
-        <nav>
-            <a href="../search/index.html">Google Search</a>
-        </nav>
-        <form action="https://google.com/search">
-            <input type="text" name="q" autocomplete="off" autofocus>
-            <input type="submit" value="Advanced Search">
-        </form>
-    </body>
+
+<head>
+    <title>Advanced Search</title>
+    <link rel="stylesheet" href="../style/style.css">
+</head>
+
+<body>
+    <nav>
+        <a href="../search/index.html">Google Search</a>
+    </nav>
+    <form action="https://google.com/search">
+        <h2>Find pages with...</h2>
+
+        <div>
+            <label>all these words:</label>
+            <input type="text" name="as_q" autocomplete="off" spellcheck="false">
+        </div>
+
+        <div>
+            <label>this exact word or phrase:</label>
+            <input type="text" name="as_epq" autocomplete="off" spellcheck="false">
+        </div>
+
+        <div>
+            <label>any of these words:</label>
+            <input type="text" name="as_oq" autocomplete="off" spellcheck="false">    
+        </div>
+
+        <div>
+            <label>none of these words:</label>
+            <input type="text" name="as_eq" autocomplete="off" spellcheck="false">    
+        </div>
+
+        <input id="advanced" type="submit" value="Advanced Search">
+    </form>
+</body>
+
 </html>

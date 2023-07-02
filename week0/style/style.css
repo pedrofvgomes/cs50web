@@ -44,3 +44,36 @@ form input[type="submit"]{
     font-weight: bold;
     width: 200px;
 }
+
+form div{
+    display: flex;
+}
+
+label{
+    font-family: Arial;
+    font-size: larger;
+    margin-top: 1.5em;
+}
+
+div input{
+    margin-left: 1em;
+}
+
+#advanced{
+    margin-left: 10em;
+    background-color: lightskyblue;
+    border-color: blue;
+    color: white;
+}
+#advanced:hover{
+    cursor: pointer;
+}
+
+button{
+    width: 200px;
+    margin: auto;
+    margin-top: 1em;
+}
+button:hover{
+    cursor: pointer;
+}
