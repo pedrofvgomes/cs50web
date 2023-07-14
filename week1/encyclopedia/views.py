@@ -16,8 +16,6 @@ def index(request):
 
 def wiki(request, title):
     markdowner = Markdown()
-    if(title.lower() == title):
-        title = title.capitalize()
     if util.get_entry(title) is None:
         return render(request, "encyclopedia/error.html",{
                       "title" : title})
@@ -75,3 +73,23 @@ def random(request):
     if entries:
         return redirect("wiki", title=choice(entries))
     return redirect("index")
+
+class EditPageForm(forms.Form):
+    title = forms.CharField(label="", widget=forms.TextInput(attrs={'placeholder': 'Title', 'autocomplete':'off'}))
+    content = forms.CharField(label="", widget=forms.Textarea(attrs={'placeholder': 'Page content', "maxlength":"2000", "columns":"10"}))
+
+def editpage(request, title):
+    content = util.get_entry(title)
+
+    if request.method == 'POST':
+        form = EditPageForm(request.POST)
+        if form.is_valid():
+            util.save_entry(form.cleaned_data['title'], form.cleaned_data['content'])
+            return redirect("wiki", title=title)
+    else:
+        form = EditPageForm(initial={'title': title, 'content': content})
+
+    return render(request, "encyclopedia/editpage.html", {
+        "title": title,
+        "editpage": form
+    })
