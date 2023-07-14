@@ -7,11 +7,9 @@
 {% block body %}
     <h1>Create New Page</h1>
     
-    <form>
-        <label>Title of the page</label>
-        <input name="title" type="text" placeholder="Title">
-        <label>Markdown content of the page</label>
-        <textarea name="content" maxlength="2000"></textarea>
+    <form action = "{% url 'newpage' %}" method="post" id="newpage">
+        {% csrf_token %}
+        {{ newpage }}
         <input type="submit" value="Save">
     </form>
 

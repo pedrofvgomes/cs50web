@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from . import util
 
@@ -12,16 +12,18 @@ def index(request):
     })
 
 def wiki(request, title):
+    if(title.lower() == title):
+        title = title.capitalize()
     if util.get_entry(title) is None:
         return render(request, "encyclopedia/error.html",{
                       "title" : title})
     return render(request, "encyclopedia/wiki.html", {
-        "title": title.capitalize(),
+        "title": title,
         "content": util.get_entry(title)
     })
 
 class SearchForm(forms.Form):
-    query = forms.CharField(label="", widget=forms.TextInput(attrs={'placeholder': 'Search Encyclopedia'}))
+    query = forms.CharField(label="", widget=forms.TextInput(attrs={'placeholder': 'Search Encyclopedia', 'autocomplete':'off'}))
     
 def search(request):
     if request.method == 'POST':
@@ -33,10 +35,7 @@ def search(request):
 
             query = search.cleaned_data["query"]
             if query in entries:
-                return render(request, "encyclopedia/wiki.html",{
-                    "title": query.capitalize(),
-                    "content" : util.get_entry(query)
-                })
+                return redirect("wiki", title=query)
             
             results = [entry for entry in entries if query.lower() in entry.lower()]
 
@@ -48,6 +47,22 @@ def search(request):
         "search" : SearchForm()
     })
 
+class NewPageForm(forms.Form):
+    title = forms.CharField(label="", widget=forms.TextInput(attrs={'placeholder': 'Title', 'autocomplete':'off'}))
+    content = forms.CharField(label="", widget=forms.Textarea(attrs={'placeholder': 'Page content', "maxlength":"2000", "columns":"10"}))
+
 def newpage(request):
-    return render(request, "encyclopedia/newpage.html")
+    if request.method == 'POST':
+        newpage = NewPageForm(request.POST)
+        if newpage.is_valid() and newpage.cleaned_data['title'].lower() not in [entry.lower() for entry in util.list_entries()]:
+            title = newpage.cleaned_data['title']
+            content = newpage.cleaned_data['content']
+            util.save_entry(title, content)
+            return redirect("wiki", title=title)
+        return render(request, "encyclopedia/newpageerror.html", {
+            "title" : newpage.cleaned_data['title']
+        })
+    return render(request, "encyclopedia/newpage.html",{
+        "newpage": NewPageForm()
+    })
 
