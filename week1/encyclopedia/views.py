@@ -4,6 +4,7 @@ from . import util
 
 from django import forms
 
+from random import choice
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -66,3 +67,8 @@ def newpage(request):
         "newpage": NewPageForm()
     })
 
+def random(request):
+    entries = util.list_entries()
+    if entries:
+        return redirect("wiki", title=choice(entries))
+    return redirect("index")
