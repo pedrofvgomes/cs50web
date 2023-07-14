@@ -6,6 +6,8 @@ from django import forms
 
 from random import choice
 
+from markdown2 import Markdown
+
 def index(request):
     return render(request, "encyclopedia/index.html", {
         "search": SearchForm(),
@@ -13,6 +15,7 @@ def index(request):
     })
 
 def wiki(request, title):
+    markdowner = Markdown()
     if(title.lower() == title):
         title = title.capitalize()
     if util.get_entry(title) is None:
@@ -20,7 +23,7 @@ def wiki(request, title):
                       "title" : title})
     return render(request, "encyclopedia/wiki.html", {
         "title": title,
-        "content": util.get_entry(title)
+        "content": markdowner.convert(util.get_entry(title))
     })
 
 class SearchForm(forms.Form):
