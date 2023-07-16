@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+import datetime
+
 
 class User(AbstractUser):
     pass
@@ -16,6 +18,7 @@ class Listing(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     starting_bid = models.FloatField()
     current_bid = models.FloatField(default=starting_bid)
+    start = models.DateTimeField(default=datetime.datetime.now())
 
 class Bid(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

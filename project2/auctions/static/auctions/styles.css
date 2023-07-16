@@ -6,9 +6,10 @@ body {
     display: flex;
     flex-direction: row;
     padding: 1em;
-    background-color: rgb(234, 234, 234);
+    background-color: rgb(226, 225, 225);
+    margin-bottom: 1em;
 }
 .listing img{
-    width: 200px;
+    width: 300px;
     margin-right: 3em;
 }

@@ -9,7 +9,7 @@
         <div class="listing-info">
             <h3>{{ listing.title }}</h3>
             <p><strong>Price: </strong>${{ listing.current_bid|floatformat:"2" }}</p>
-            <span>Created (date)</span>
+            <span>Created {{ listing.start }}</span>
         </div>
     </div>
     {% endfor %}
