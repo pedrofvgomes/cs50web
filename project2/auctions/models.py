@@ -14,8 +14,8 @@ class Listing(models.Model):
     description = models.CharField(max_length=200)
     image = models.URLField(default="https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png")
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    starting_bid = models.IntegerField()
-    current_bid = models.IntegerField(default=starting_bid)
+    starting_bid = models.FloatField()
+    current_bid = models.FloatField(default=starting_bid)
 
 class Bid(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

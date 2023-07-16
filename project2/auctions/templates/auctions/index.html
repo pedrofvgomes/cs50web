@@ -3,5 +3,16 @@
 {% block body %}
     <h2>Active Listings</h2>
 
+    {% for listing in listings %}
+    <div class="listing">
+        <img src="{{ listing.image }}">
+        <div class="listing-info">
+            <h3>{{ listing.title }}</h3>
+            <p><strong>Price: </strong>${{ listing.current_bid|floatformat:"2" }}</p>
+            <span>Created (date)</span>
+        </div>
+    </div>
+    {% endfor %}
+
     TODO
 {% endblock %}
