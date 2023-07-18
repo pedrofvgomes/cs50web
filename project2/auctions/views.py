@@ -8,7 +8,7 @@ from .models import User
 
 from django import forms
 
-from auctions.models import Category, Listing
+from auctions.models import Category, Listing, Bid, User
 
 
 def index(request):
@@ -72,7 +72,7 @@ def register(request):
 class CreateListing(forms.Form):
     title = forms.CharField(max_length=20)
     description = forms.CharField(max_length=200)
-    bid = forms.IntegerField(min_value=0)
+    bid = forms.FloatField(min_value=0)
     image = forms.URLField()
     category = forms.ChoiceField(choices=[(cat.id, cat.name) for cat in Category.objects.all()])
 
@@ -82,18 +82,46 @@ def create(request):
         create = CreateListing(request.POST)
         if create.is_valid():
             data = create.cleaned_data
-            category = Category(name="teste")
-            category.save()
             listing = Listing(user = User.objects.get(username = request.user.username), 
                               title = data['title'], 
                               description = data['description'],
                               image = data['image'],
                               category = Category.objects.get(id = int(data['category'])),
-                              starting_bid = int(data['bid']),
-                              current_bid = int(data['bid']),
+                              starting_bid = float(data['bid']),
+                              current_bid = float(data['bid']),
                               )
             listing.save()
+            Bid(user = User.objects.get(username = request.user.username), listing = listing, amount = float(data['bid'])).save()
             return redirect("index")          
     return render(request, "auctions/create.html", {
         "create": CreateListing()
+    })      
+
+def listing(request, listing_id):
+    listing = Listing.objects.filter(id = listing_id)
+    if len(listing) == 0:
+        return render(request, "auctions/index.html", {
+            'listings' : Listing.objects.all()
+        })
+    return render(request, "auctions/listing.html",{
+        "listing" : listing[0],
+        "n_bids": len(Bid.objects.filter(listing = listing[0])),
+        "top_bidder" : Bid.objects.filter(amount = listing[0].current_bid)[0].user.id,
+        "min" : listing[0].current_bid + 0.01
     })
+    
+def placebid(request):
+    if request.method == 'POST':
+        data = request.POST
+        
+        user = User.objects.get(id = data['user_id'])
+        listing = Listing.objects.get(id = data['listing_id'])
+        amount = float(data['amount'])
+        
+        if amount > listing.current_bid:
+            Bid(user = user, listing = listing, amount = amount).save()
+            listing.current_bid = amount
+            listing.save()
+
+    return redirect("listing", listing_id = data['listing_id'])
+    

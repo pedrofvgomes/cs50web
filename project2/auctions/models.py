@@ -23,7 +23,7 @@ class Listing(models.Model):
 class Bid(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
-    amount = models.IntegerField()
+    amount = models.FloatField()
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
