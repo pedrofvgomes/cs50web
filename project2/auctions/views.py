@@ -8,7 +8,7 @@ from .models import User
 
 from django import forms
 
-from auctions.models import Category, Listing, Bid, User, Watchlist, Winner
+from auctions.models import Category, Listing, Bid, User, Watchlist, Winner, Comment
 
 
 def index(request):
@@ -111,7 +111,8 @@ def listing(request, listing_id):
         "min" : listing[0].current_bid + 0.01,
         "watchlist" : len(Watchlist.objects.filter(user = User.objects.get(id=request.user.id), listing = listing[0])) > 0,
         "open" : listing[0].open,
-        "winner" : winner
+        "winner" : winner,
+        "comments" : Comment.objects.filter(listing = listing[0])
     })
     
 def placebid(request):
@@ -195,3 +196,19 @@ def close(request):
         winner.save()
     
     return redirect("listing", listing_id = data['listing_id'])
+
+def comment(request):
+    if request.method == 'POST':
+        data = request.POST
+
+        listing = Listing.objects.get(id = data['listing_id'])
+        user = User.objects.get(id = data['user_id'])
+        title = data['title']
+        content = data['content']
+
+        Comment(listing = listing, user = user, title = title, content = content).save()
+
+    return redirect("listing", listing_id = data['listing_id'])
+
+
+        

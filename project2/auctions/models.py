@@ -29,7 +29,9 @@ class Bid(models.Model):
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     listing = models.ForeignKey(Listing, on_delete= models.CASCADE)
-    content = models.CharField(max_length=200)
+    datetime = models.DateTimeField(default=datetime.datetime.now())
+    title = models.CharField(max_length=20)
+    content = models.CharField(max_length=400)
 
 class Watchlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

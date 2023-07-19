@@ -73,4 +73,30 @@
         </form>
     {% endif %}
 
+    <h2 style="margin-top: 1em;">Comments</h2>
+    <hr>
+    <!-- comment section -->
+    {% for comment in comments %}
+    <div class="comment" style="background-color: lightgrey; padding: 1em; width: 400px; margin-bottom: 1em;">
+        <h4>{{ comment.title }}</h4>
+        <p>{{ comment.content }}</p>
+        <span style="font-size: smaller;"><strong>{{ comment.user.username }}</strong> at {{ comment.datetime }}</span>
+    </div>
+    {% endfor %}
+        {% if not comments %}
+    <p>No comments yet... Be the first one!</p>
+    {%endif%}
+    {% if comments %}
+    <hr>
+    {%endif%}
+    <!-- post comment -->
+    <form action="{% url 'comment' %}" method="post" id="commentform">
+        {% csrf_token %}
+        <input type="hidden" name="user_id" value="{{ user.id }}">
+        <input type="hidden" name="listing_id" value="{{ listing.id }}">
+        <input type="text" name="title" placeholder="Title" maxlength="20">
+        <textarea name="content" cols="10" rows="10" placeholder="Your comment" maxlength="400"></textarea>
+        <input type="submit" value="Post Comment">
+    </form>
+
 {% endblock %}
