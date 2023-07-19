@@ -13,3 +13,8 @@ body {
     width: 300px;
     margin-right: 3em;
 }
+
+.listing:hover , .listing{
+    color: black;
+    text-decoration: none;
+}

@@ -8,7 +8,7 @@ from .models import User
 
 from django import forms
 
-from auctions.models import Category, Listing, Bid, User
+from auctions.models import Category, Listing, Bid, User, Watchlist, Winner
 
 
 def index(request):
@@ -72,7 +72,7 @@ def register(request):
 class CreateListing(forms.Form):
     title = forms.CharField(max_length=20)
     description = forms.CharField(max_length=200)
-    bid = forms.FloatField(min_value=0)
+    bid = forms.FloatField(min_value=0.01)
     image = forms.URLField()
     category = forms.ChoiceField(choices=[(cat.id, cat.name) for cat in Category.objects.all()])
 
@@ -99,15 +99,19 @@ def create(request):
 
 def listing(request, listing_id):
     listing = Listing.objects.filter(id = listing_id)
+    winner = None
+    if len(Winner.objects.filter(listing = listing[0])) > 0:
+        winner = Winner.objects.filter(listing = listing[0])[0].user
     if len(listing) == 0:
-        return render(request, "auctions/index.html", {
-            'listings' : Listing.objects.all()
-        })
+        return redirect("index")
     return render(request, "auctions/listing.html",{
         "listing" : listing[0],
         "n_bids": len(Bid.objects.filter(listing = listing[0])),
         "top_bidder" : Bid.objects.filter(amount = listing[0].current_bid)[0].user.id,
-        "min" : listing[0].current_bid + 0.01
+        "min" : listing[0].current_bid + 0.01,
+        "watchlist" : len(Watchlist.objects.filter(user = User.objects.get(id=request.user.id), listing = listing[0])) > 0,
+        "open" : listing[0].open,
+        "winner" : winner
     })
     
 def placebid(request):
@@ -125,3 +129,69 @@ def placebid(request):
 
     return redirect("listing", listing_id = data['listing_id'])
     
+def addtowatchlist(request):
+    if request.method == 'POST':
+        data = request.POST
+
+        user = User.objects.get(id = data['user_id'])
+        listing = Listing.objects.get(id = data['listing_id'])
+
+        if len(Watchlist.objects.filter(user = user, listing = listing)) > 0:
+            Watchlist.objects.filter(user = user, listing = listing)[0].delete()
+        
+        else:
+            Watchlist(user = user, listing = listing).save()
+    
+    return redirect("listing", listing_id = data['listing_id'])
+
+def watchlist(request):
+    watchlist = Watchlist.objects.filter(user = User.objects.get(id = request.user.id))
+    return render(request, "auctions/watchlist.html", {
+        'listings' : [w.listing for w in watchlist]
+    })
+
+def categories(request):
+    return render(request, "auctions/categories.html", {
+        "categories" : Category.objects.all()
+    })
+
+def category(request, category_id):
+    category = Category.objects.filter(id = category_id)
+    if len(category) == 0:
+        return redirect("index")
+    return render(request, "auctions/category.html",{
+        "category" : category[0],
+        "listings" : Listing.objects.filter(category = category[0])
+    })
+
+def error(request, string):
+    return redirect("index")
+
+def addtowatchlist(request):
+    if request.method == 'POST':
+        data = request.POST
+
+        user = User.objects.get(id = data['user_id'])
+        listing = Listing.objects.get(id = data['listing_id'])
+
+        if len(Watchlist.objects.filter(user = user, listing = listing)) > 0:
+            Watchlist.objects.filter(user = user, listing = listing)[0].delete()
+        
+        else:
+            Watchlist(user = user, listing = listing).save()
+    
+    return redirect("listing", listing_id = data['listing_id'])
+
+def close(request):
+    if request.method == 'POST':
+        data = request.POST
+
+        listing = Listing.objects.get(id = data['listing_id'])
+        bid = Bid.objects.get(listing = listing, amount = listing.current_bid)
+
+        winner = Winner(user = bid.user, listing = listing)
+        listing.open = False
+        listing.save()
+        winner.save()
+    
+    return redirect("listing", listing_id = data['listing_id'])

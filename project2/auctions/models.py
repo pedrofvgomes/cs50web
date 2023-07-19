@@ -19,6 +19,7 @@ class Listing(models.Model):
     starting_bid = models.FloatField()
     current_bid = models.FloatField(default=starting_bid)
     start = models.DateTimeField(default=datetime.datetime.now())
+    open = models.BooleanField(default=True)
 
 class Bid(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -29,3 +30,11 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     listing = models.ForeignKey(Listing, on_delete= models.CASCADE)
     content = models.CharField(max_length=200)
+
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
+
+class Winner(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)

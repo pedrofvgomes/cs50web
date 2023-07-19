@@ -1,0 +1,17 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Category: {{category.name}}</h2>
+
+    {% for listing in listings %}
+    <a href="listing/{{listing.id}}" class="listing">
+            <img src="{{ listing.image }}">
+            <div class="listing-info">
+                <h3>{{ listing.title }}</h3>
+                <p><strong>Price: </strong>${{ listing.current_bid|floatformat:"2" }}</p>
+                <span>Created {{ listing.start }}</span>
+                {% if not listing.open %}<h3 style="color: red;">CLOSED</h3>{%endif%}
+            </div>
+    </a>
+    {% endfor %}
+{% endblock %}

@@ -4,34 +4,73 @@
 
     <h2>Listing: {{ listing.title }}</h2>
 
-    <!-- watchlist -->
+    {% if open %}
+        <form action="{% url 'addtowatchlist' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="user_id" value="{{ user.id }}">
+            <input type="hidden" name="listing_id" value="{{ listing.id }}">
+            <input type="submit" value="Watchlist" id="watchlist-button">
+        </form>
+
+        {% if watchlist %}
+            <style>
+                #watchlist-button{
+                    background-color: lightblue;
+                    color: white;
+                }
+            </style>
+        {% endif %}
+
+    {% endif %}
 
     <img src="{{ listing.image }}" alt="{{ listing.title }}" width="700px">
 
     <p>{{ listing.description }}</p>
 
-    <h2>${{ listing.current_bid|floatformat:2 }}</h2>
-
-    <span>{{ n_bids }} bid(s) so far.</span>
-
-    {% if top_bidder == listing.user.id %}
-    <span>
-        Your bid is the current bid.    
-    </span>
+    {% if not open and winner.id == user.id %}
+        <h2 style="color: green;">You won this auction!</h2>
     {% endif %}
 
-    <form action="{% url 'placebid' %}" method="post">
-        {% csrf_token %}
-        <input type="number" step="0.01" name="amount" min="{{ min }}">
-        <input type="hidden" name="user_id" value="{{ user.id }}">
-        <input type="hidden" name="listing_id" value="{{ listing.id }}">
-        <input type="submit" value="Place Bid" id="place-bid">
-    </form>
+    {% if open %}
+
+        <h2>${{ listing.current_bid|floatformat:2 }}</h2>
+
+        <span>{{ n_bids }} bid(s) so far.</span>
+
+        {% if top_bidder == listing.user.id %}
+        <span>
+            Your bid is the current bid.    
+        </span>
+        {% endif %}
+
+        <form action="{% url 'placebid' %}" method="post">
+            {% csrf_token %}
+            <input type="number" step="0.01" name="amount" min="{{ min }}">
+            <input type="hidden" name="user_id" value="{{ user.id }}">
+            <input type="hidden" name="listing_id" value="{{ listing.id }}">
+            <input type="submit" value="Place Bid">
+        </form>
+
+    {% endif %}
 
     <h2>Details</h2>
     <ul>
         <li>Listed by: <span style="color: blue;">{{listing.user.username}}</span></li>
         <li>Category: {{ listing.category.name }}</li>
+        <li>Starting bid: <strong>${{ listing.starting_bid|floatformat:2 }}</strong></li>
+        {% if not open %} 
+            <li>Final bid: <strong>${{ listing.current_bid|floatformat:2 }}</strong></li>
+            <li>Winner: <strong>{{ winner.username }}</strong> </li>
+        {% endif %}
+        <li>Created {{ listing.start }}</li>
     </ul>
+
+    {% if listing.user.id == user.id and open %}
+        <form action="{% url 'close' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="listing_id" value="{{listing.id}}">
+            <input type="submit" value="Close Auction">
+        </form>
+    {% endif %}
 
 {% endblock %}

@@ -4,13 +4,31 @@
     <h2>Active Listings</h2>
 
     {% for listing in listings %}
-    <div class="listing">
-        <img src="{{ listing.image }}">
-        <div class="listing-info">
-            <h3>{{ listing.title }}</h3>
-            <p><strong>Price: </strong>${{ listing.current_bid|floatformat:"2" }}</p>
-            <span>Created {{ listing.start }}</span>
-        </div>
-    </div>
+    {% if listing.open %}
+    <a href="listing/{{listing.id}}" class="listing">
+            <img src="{{ listing.image }}">
+            <div class="listing-info">
+                <h3>{{ listing.title }}</h3>
+                <p><strong>Price: </strong>${{ listing.current_bid|floatformat:"2" }}</p>
+                <span>Created {{ listing.start }}</span>
+            </div>
+    </a>
+    {%endif%}
+    {% endfor %}
+
+    <h2>Closed Listings</h2>
+
+    {% for listing in listings %}
+    {% if not listing.open %}
+    <a href="listing/{{listing.id}}" class="listing">
+            <img src="{{ listing.image }}">
+            <div class="listing-info">
+                <h3>{{ listing.title }}</h3>
+                <p><strong>Price: </strong>${{ listing.current_bid|floatformat:"2" }}</p>
+                <span>Created {{ listing.start }}</span>
+                <h3 style="color: red;">CLOSED</h3>
+            </div>
+    </a>
+    {%endif%}
     {% endfor %}
 {% endblock %}
