@@ -4,7 +4,7 @@
 
     <h2>Create Listing</h2>
 
-    <form action = "{% url 'create' %}" method="post">
+    <form action = "{% url 'create' %}" method="post" style="display: flex; flex-direction: column; width: 400px;">
         {% csrf_token %}
         {{ create }}
         <input type="submit" value="Save">

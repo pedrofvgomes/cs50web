@@ -76,7 +76,7 @@ def register(request):
 
 class CreateListing(forms.Form):
     title = forms.CharField(max_length=20)
-    description = forms.CharField(max_length=200)
+    description = forms.CharField(widget=forms.Textarea(attrs={"maxlength":"200", "columns":"10"}))
     bid = forms.FloatField(min_value=0.01)
     image = forms.URLField()
     category = forms.ChoiceField(choices=[(cat.id, cat.name) for cat in Category.objects.all()])
