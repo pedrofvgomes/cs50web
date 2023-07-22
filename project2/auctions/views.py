@@ -112,7 +112,7 @@ def listing(request, listing_id):
     return render(request, "auctions/listing.html",{
         "listing" : listing[0],
         "n_bids": len(Bid.objects.filter(listing = listing[0])),
-        "top_bidder" : Bid.objects.filter(amount = listing[0].current_bid)[0].user.id,
+        "top_bidder" : Bid.objects.filter(listing = listing[0], amount = listing[0].current_bid)[0].user,
         "min" : listing[0].current_bid + 0.01,
         "watchlist" : len(Watchlist.objects.filter(user = User.objects.get(id=request.user.id), listing = listing[0])) > 0,
         "open" : listing[0].open,
