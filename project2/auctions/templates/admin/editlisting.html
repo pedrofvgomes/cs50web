@@ -1,0 +1,31 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h1 style="margin-bottom: 1em;">Edit Listing</h1>
+    <form action="{% url 'confirm_edit' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" value="{{listing.id}}" name="listing_id">
+        <h2>Listing: <input type='text' value='{{ listing.title }}' name="title"></h2>
+
+        <img src="{{ listing.image }}" alt="{{ listing.title }}" width="700px">
+        <br>
+        <label for="description" style="margin-top: 1em;">Description</label>
+        <br>
+        <textarea type="text" name="description" cols="50" rows="10">{{listing.description}}</textarea>
+    
+        <h2>Details</h2>
+        <ul>
+            <li>Listed by: <span style="color: blue;">{{listing.user.username}}</span></li>
+            <li>Category: 
+                <select name="category">
+                    {% for category in categories %}
+                        <option>{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </li>
+            <li>Created {{ listing.start }}</li>
+        </ul>
+
+        <input type="submit" value="Save Changes">
+    </form>
+{% endblock %}

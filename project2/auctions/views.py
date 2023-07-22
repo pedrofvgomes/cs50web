@@ -12,9 +12,14 @@ from auctions.models import Category, Listing, Bid, User, Watchlist, Winner, Com
 
 
 def index(request):
-    return render(request, "auctions/index.html", {
-        'listings' : Listing.objects.all()
-    })
+    if request.user.is_superuser:
+        return render(request, "admin/index.html", {
+            'listings' : Listing.objects.all()
+        })
+    else:
+        return render(request, "auctions/index.html", {
+            "listings" : Listing.objects.all()
+        })
 
 
 def login_view(request):
@@ -211,4 +216,68 @@ def comment(request):
     return redirect("listing", listing_id = data['listing_id'])
 
 
-        
+
+def admin_listings(request):
+    return render(request, "admin/listings.html", {
+        "listings" : Listing.objects.all()
+    })
+
+def admin_comments(request):
+    return render(request, "admin/comments.html", {
+        "comments": Comment.objects.all()
+    })
+
+def admin_bids(request):
+    return render(request, "admin/bids.html", {
+        "bids" : Bid.objects.all()
+    })
+
+def delete_comment(request, comment_id):
+    comment = Comment.objects.get(id=comment_id)
+    comment.delete()
+    return redirect('admin_comments')
+
+def delete_bid(request, bid_id):
+    bid = Bid.objects.get(id=bid_id)
+    bids = [a.amount for a in Bid.objects.filter(listing = bid.listing)]
+    if len(bids) > 1:
+        bid.delete()
+        listing = bid.listing
+        listing.current_bid = max([a.amount for a in Bid.objects.filter(listing = listing)])
+        listing.save()
+    return redirect('admin_bids')
+
+def edit_listing(request, listing_id):
+    listing = Listing.objects.get(id=listing_id)
+    return render(request, "admin/editlisting.html",{
+        "listing" : listing,
+        "categories" : Category.objects.all()
+    })
+def confirm_edit(request):
+    if request.method == 'POST':
+        data = request.POST
+        listing = Listing.objects.get(id=data['listing_id'])
+        listing.title = data['title']
+        listing.description = data['description']
+        listing.category = Category.objects.get(name=data['category'])
+        listing.save()
+        return redirect("listing", listing_id = int(data['listing_id']))
+
+def delete_listing(request, listing_id):
+    listing = Listing.objects.get(id=listing_id)
+    for comment in Comment.objects.get(listing=listing):
+        comment.delete()
+    for bid in Bid.objects.get(listing = listing):
+        bid.delete()
+    for winner in Winner.objects.get(listing = listing):
+        winner.delete()
+    listing.delete()
+    return redirect("index")
+
+def create_category(request):
+    if request.method == 'POST':
+        data = request.POST
+
+        Category(name=data['name']).save()
+
+        return redirect('categories')

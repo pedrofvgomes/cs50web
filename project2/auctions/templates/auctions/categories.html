@@ -7,4 +7,15 @@
         <li style="font-size: larger;"><a href="category/{{category.id}}">{{category.name}}</a></li>
         {% endfor %}
     </ul>
+
+    {% if user.is_superuser %}
+    <hr>
+    <h2>Create a new category</h2>
+    <form action="{% url 'create_category' %}" method="post">
+        {% csrf_token %}
+        <label for="name">Category name</label>
+        <input type="text" name="name">
+        <input type="submit" value="Create">
+    </form>
+    {% endif %}
 {% endblock %}

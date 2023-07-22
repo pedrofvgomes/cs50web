@@ -8,6 +8,7 @@ body {
     padding: 1em;
     background-color: rgb(226, 225, 225);
     margin-bottom: 1em;
+    margin-top: 2em;
 }
 .listing img{
     width: 300px;

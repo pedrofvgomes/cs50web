@@ -1,0 +1,17 @@
+{% extends 'admin/layout.html' %}
+
+{% block body %}
+    <h2>Manage Comments</h2>
+
+    {% for comment in comments %}
+    <div class="management" style="color: black; text-decoration: none; background-color: lightgrey; padding: 1em; width: 700px; margin-bottom: 1em;">
+        <h3>{{ comment.title }}</h3>
+        <p>{{ comment.content }}</p>
+        <span><strong>{{ comment.user.username }}</strong> at {{ comment.datetime }}</span>
+        <br>
+        <span>Listing name: <a href='listing/{{comment.listing.id}}'>{{ comment.listing.title }}</a></span>
+        <br>
+        <a class="management-link" href="deletecomment/{{comment.id}}" style="color: red;">Delete</a>
+    </div>
+    {% endfor %}
+{% endblock %}

@@ -45,7 +45,7 @@
 
         <form action="{% url 'placebid' %}" method="post">
             {% csrf_token %}
-            <input type="number" step="0.01" name="amount" min="{{ min }}">
+            <input type="number" step="0.01" name="amount" min="{{ min }}" autocomplete="off">
             <input type="hidden" name="user_id" value="{{ user.id }}">
             <input type="hidden" name="listing_id" value="{{ listing.id }}">
             <input type="submit" value="Place Bid">
@@ -90,11 +90,12 @@
     <hr>
     {%endif%}
     <!-- post comment -->
+    <h2>Place a comment</h2>
     <form action="{% url 'comment' %}" method="post" id="commentform">
         {% csrf_token %}
         <input type="hidden" name="user_id" value="{{ user.id }}">
         <input type="hidden" name="listing_id" value="{{ listing.id }}">
-        <input type="text" name="title" placeholder="Title" maxlength="20">
+        <input type="text" name="title" placeholder="Title" maxlength="20" autocomplete="off">
         <textarea name="content" cols="10" rows="10" placeholder="Your comment" maxlength="400"></textarea>
         <input type="submit" value="Post Comment">
     </form>

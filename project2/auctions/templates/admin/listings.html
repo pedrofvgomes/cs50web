@@ -1,0 +1,38 @@
+{% extends 'admin/layout.html' %}
+
+{% block body %}
+<h2>Manage Listings</h2>
+
+{% for listing in listings %}
+{% if listing.open %}
+<a href="listing/{{listing.id}}" class="listing">
+    <img src="{{ listing.image }}">
+    <div class="listing-info">
+        <h3>{{ listing.title }}</h3>
+        <p><strong>Price: </strong>${{ listing.current_bid|floatformat:"2" }}</p>
+        <span>Created {{ listing.start }}</span>
+    </div>
+    <a class="management-item" href="editlisting/{{listing.id}}">Edit</a>
+    <a class="management-item" href="" style="padding: 1em;">Delete</a>
+</a>
+{%endif%}
+{% endfor %}
+
+<h2 style="margin-top: 1em;">Closed Listings</h2>
+
+{% for listing in listings %}
+{% if not listing.open %}
+<a href="listing/{{listing.id}}" class="listing">
+    <img src="{{ listing.image }}">
+    <div class="listing-info">
+        <h3>{{ listing.title }}</h3>
+        <p><strong>Price: </strong>${{ listing.current_bid|floatformat:"2" }}</p>
+        <span>Created {{ listing.start }}</span>
+        <h3 style="color: red;">CLOSED</h3>
+    </div>
+    <a class="management-item" href="editlisting{{listing.id}}">Edit</a>
+    <a class="management-item" href="" style="padding: 1em;">Delete</a>
+</a>
+{%endif%}
+{% endfor %}
+{% endblock %}

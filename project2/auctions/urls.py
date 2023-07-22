@@ -16,5 +16,18 @@ urlpatterns = [
     path("category/<str:category_id>", views.category, name="category"),
     path("close", views.close, name="close"),
     path("comment", views.comment, name="comment"),
+    
+    #admin
+    path("admin_listings", views.admin_listings, name="admin_listings"),
+    path("admin_comments", views.admin_comments, name="admin_comments"),
+    path("admin_bids", views.admin_bids, name="admin_bids"),
+    path("deletecomment/<int:comment_id>", views.delete_comment),
+    path("deletebid/<int:bid_id>", views.delete_bid),
+    path("editlisting/<int:listing_id>", views.edit_listing),
+    path("deletelisting/<int:listing_id>", views.delete_listing),
+    path("confirmedit", views.confirm_edit, name='confirm_edit'),
+    path("createcategory", views.create_category, name="create_category"),
+
+    #erro
     path("<str:string>", views.error)
 ]

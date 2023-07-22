@@ -1,0 +1,16 @@
+{% extends 'admin/layout.html' %}
+
+{% block body %}
+    <h2>Manage Bids</h2>
+
+    {% for bid in bids %}
+    <div class="management" style="color: black; text-decoration: none; background-color: lightgrey; padding: 1em; width: 700px; margin-bottom: 1em;">
+        <h3>${{ bid.amount|floatformat:2 }}</h3>
+        <span>{{ bid.user.username }}</span>
+        <br>
+        <span>Listing name: <a  href="listing/{{bid.listing.id}}">{{ bid.listing.title }}</a></span>
+        <br>
+        <a class="management-link" style="color: red;" href="deletebid/{{bid.id}}">Delete</a>
+    </div>
+    {% endfor %}
+{% endblock %}
