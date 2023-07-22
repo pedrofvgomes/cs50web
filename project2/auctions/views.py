@@ -265,11 +265,11 @@ def confirm_edit(request):
 
 def delete_listing(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
-    for comment in Comment.objects.get(listing=listing):
+    for comment in Comment.objects.filter(listing=listing):
         comment.delete()
-    for bid in Bid.objects.get(listing = listing):
+    for bid in Bid.objects.filter(listing = listing):
         bid.delete()
-    for winner in Winner.objects.get(listing = listing):
+    for winner in Winner.objects.filter(listing = listing):
         winner.delete()
     listing.delete()
     return redirect("index")
