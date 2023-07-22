@@ -13,7 +13,7 @@
         <span>Created {{ listing.start }}</span>
     </div>
     <a class="management-item" href="editlisting/{{listing.id}}">Edit</a>
-    <a class="management-item" href="" style="padding: 1em;">Delete</a>
+    <a class="management-item" href="deletelisting/{{listing.id}}" style="padding: 1em;">Delete</a>
 </a>
 {%endif%}
 {% endfor %}
@@ -31,7 +31,7 @@
         <h3 style="color: red;">CLOSED</h3>
     </div>
     <a class="management-item" href="editlisting{{listing.id}}">Edit</a>
-    <a class="management-item" href="" style="padding: 1em;">Delete</a>
+    <a class="management-item" href="deletelisting/{{listing.id}}" style="padding: 1em;">Delete</a>
 </a>
 {%endif%}
 {% endfor %}
