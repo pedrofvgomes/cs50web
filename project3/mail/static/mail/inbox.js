@@ -1,5 +1,3 @@
-let page = 1;
-
 document.addEventListener('DOMContentLoaded', function () {
 
   let emailview = document.createElement('div');
@@ -53,8 +51,6 @@ function compose_email() {
 }
 
 function load_mailbox(mailbox) {
-  page = 1;
-
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#email-view').style.display = 'none';
