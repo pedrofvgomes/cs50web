@@ -42,6 +42,7 @@ function compose_email() {
 
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#email-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
 
   // Clear out composition fields
@@ -118,6 +119,8 @@ function load_mailbox(mailbox) {
                 if (!data.archived) emailViewHTML += `<button class='btn btn-sm btn-outline-primary' id="archive">Archive</button>`;
                 else emailViewHTML += `<button class='btn btn-sm btn-outline-primary' id="archive">Unarchive</button>`;
               }
+
+              emailViewHTML += `<p style='margin-top:1.5em'>${data.body}</p>`;
 
               document.querySelector('#email-view').innerHTML = emailViewHTML;
               document.querySelector('#email-view').style.fontSize = 'large';
