@@ -1,0 +1,49 @@
+#newpost, .post{
+    padding: 1em;
+    border: 1px solid lightgrey;
+    margin: 1em;
+}
+
+.post span{
+    color: grey;
+    font-size: smaller;
+}
+
+svg:hover{
+    cursor: pointer;
+}
+
+.post h4{
+    width: fit-content;
+}
+.post h4:hover{
+    cursor: pointer;
+    color: grey;
+    padding: 0;
+}
+
+#profile{
+    padding: 1em;
+    background-color: whitesmoke;
+    border: solid 1px grey;
+    margin: 1em;
+}
+
+#pagination{
+    width: 100%;
+    padding: 1em;
+    padding-top: 0;
+    text-align: right;
+}
+#pagination span{
+    margin-right: 1em;
+    margin-top: 0;
+}
+
+.edit{
+    color: blue;
+}
+.edit:hover{
+    cursor: pointer;
+    text-decoration: underline;
+}

@@ -1,0 +1,59 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <div id="profile">
+        <h2>{{ userprofile.username }}</h2>
+        <span>{{ followers }} followers</span>
+        <br>
+        <span>{{ following }} following</span>
+        <br>
+        {% if user.username != userprofile.username and user.is_authenticated%}
+            <a class="btn btn-sm btn-outline-primary" href="follow/{{userprofile.username}}" style="margin-top: 1em;">
+                {% if follows %}
+                    Unfollow
+                {% else %}
+                    Follow
+                {% endif %}
+            </a>
+        {% endif %}
+    </div>
+
+    <div id="posts">
+        {% for post in page_posts %}
+        <div class="post" id="{{post.id}}">
+            <h4>{{ post.user.username }}</h4>
+    
+            {% if post.user == user %}
+            <a class="edit">Edit</a>
+            {% endif %}
+    
+            <p>{{ post.body }}</p>
+    
+            <span>{{ post.timestamp }}</span>
+    
+            <br>
+    
+            <div class="likes">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                </svg>
+                <span>{{ post.likes }}</span>
+            </div>
+    
+            <span>Comment</span>
+        </div>
+        {% endfor %}
+    </div>
+    <div id="pagination">
+        {% if page_posts.has_previous %}
+            <a href="{% url 'profile' userprofile.username %}?page={{ page_posts.previous_page_number }}">Previous</a>
+        {% endif %}
+        
+        <span>{{ page_posts.number }} / {{ page_posts.paginator.num_pages }}</span>
+        
+        {% if page_posts.has_next %}
+            <a href="{% url 'profile' userprofile.username %}?page={{ page_posts.next_page_number }}">Next</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
